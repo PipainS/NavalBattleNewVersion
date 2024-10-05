@@ -6,29 +6,33 @@ import Base.Enum.Orientation
 import Base.Ship
 
 class HumanPlayer(board: Board) : Player(board) {
+    private val letterToIndex = ('A'..'Z').mapIndexed { index, c -> c.toString() to index }.toMap() // fix
+
     override fun makeMove(opponentBoard: Board): Coordinate {
         println("Your board:")
         displayBoards(board, opponentBoard)
 
-        println("Enter coordinates (x y): ")
+        println("Enter coordinates (e.g., A 0): ")
         val input = readLine()
-        val (x, y) = input!!.split(" ").map { it.toInt() }
-        return Coordinate(x, y)
+        val (letter, x) = input!!.split(" ")
+        val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+        return Coordinate(x.toInt(), y)
     }
 
     override fun placeShips() {
         println("Your board before placing ships:")
         displayBoard(board, true)
 
-        val shipSizes = listOf(5, 4, 3, 3, 2) // Пример размеров кораблей
+        val shipSizes = listOf(5, 4, 3, 3, 2) // Example ship sizes
         for (size in shipSizes) {
             var placed = false
             while (!placed) {
-                println("Enter coordinates and orientation (H/V) for ship of size $size (x y H/V): ")
+                println("Enter coordinates and orientation (H/V) for ship of size $size (e.g., A 0 H): ")
                 val input = readLine()
-                val (x, y, orientationInput) = input!!.split(" ")
+                val (letter, x, orientationInput) = input!!.split(" ")
+                val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
                 val orientation = if (orientationInput.uppercase() == "H") Orientation.HORIZONTAL else Orientation.VERTICAL
-                val coordinates = generateCoordinates(size, Coordinate(x.toInt(), y.toInt()), orientation)
+                val coordinates = generateCoordinates(size, Coordinate(x.toInt(), y), orientation)
                 val ship = Ship(size, coordinates, orientation)
                 placed = board.placeShip(ship)
                 if (!placed) {

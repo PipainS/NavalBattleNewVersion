@@ -48,7 +48,8 @@ class Board(val size: Int = 10) {
 
     fun getBoardDisplay(showShips: Boolean = false): List<String> {
         val result = mutableListOf<String>()
-        result.add("  " + (0 until size).joinToString(" ") { it.toString() })
+        val header = ('A'..'J').joinToString(" ") { it.toString() }
+        result.add("  $header") // Заголовок столбцов
         for (i in 0 until size) {
             val row = StringBuilder()
             row.append("$i ")
