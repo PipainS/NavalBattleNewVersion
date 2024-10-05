@@ -46,17 +46,19 @@ class Board(val size: Int = 10) {
         }
     }
 
-    fun displayBoard(showShips: Boolean = false) {
-        println("  " + (0 until size).joinToString(" ") { it.toString() })
+    fun getBoardDisplay(showShips: Boolean = false): List<String> {
+        val result = mutableListOf<String>()
+        result.add("  " + (0 until size).joinToString(" ") { it.toString() })
         for (i in 0 until size) {
-            print("$i ")
+            val row = StringBuilder()
+            row.append("$i ")
             for (j in 0 until size) {
                 val cell = grid[i][j]
                 val symbol = if (showShips || cell.status != CellStatus.SHIP) cell.getSymbol() else '.'
-                print("$symbol ")
+                row.append("$symbol ")
             }
-            println()
+            result.add(row.toString())
         }
+        return result
     }
 }
-

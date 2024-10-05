@@ -14,6 +14,7 @@ class Game {
     fun start() {
         println("Welcome to Battleship!")
 
+        println("Place your ships:")
         humanPlayer.placeShips()
         computerPlayer.placeShips()
 
@@ -33,19 +34,23 @@ class Game {
         println("${currentPlayer::class.simpleName} shoots at (${move.x}, ${move.y}) and ${if (result == CellStatus.HIT) "hits" else "misses"}!")
         checkGameOver(opponentPlayer)
 
-        println("Current state:")
-        println("${currentPlayer::class.simpleName}'s board:")
-        currentPlayer.board.displayBoard(showShips = true)
-        println("Opponent's board:")
-        opponentPlayer.board.displayBoard(showShips = false)
+        displayBoards(currentPlayer.board, opponentPlayer.board)
     }
 
     private fun checkGameOver(player: Player) {
         isGameOver = player.board.grid.flatten().none { it.status == CellStatus.SHIP }
         if (isGameOver) {
             println("${player::class.simpleName} loses! All ships have been sunk.")
-            println()
         }
+    }
 
+    private fun displayBoards(playerBoard: Board, opponentBoard: Board) {
+        val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
+        val opponentDisplay = opponentBoard.getBoardDisplay(showShips = false)
+
+        println("Your board:".padEnd(25) + "Opponent's board:")
+        for (i in playerDisplay.indices) {
+            println(playerDisplay[i].padEnd(25) + opponentDisplay[i])
+        }
     }
 }

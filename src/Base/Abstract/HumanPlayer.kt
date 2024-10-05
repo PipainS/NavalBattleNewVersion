@@ -8,9 +8,7 @@ import Base.Ship
 class HumanPlayer(board: Board) : Player(board) {
     override fun makeMove(opponentBoard: Board): Coordinate {
         println("Your board:")
-        board.displayBoard(showShips = true)
-        println("Opponent's board:")
-        opponentBoard.displayBoard(showShips = false)
+        displayBoards(board, opponentBoard)
 
         println("Enter coordinates (x y): ")
         val input = readLine()
@@ -19,6 +17,9 @@ class HumanPlayer(board: Board) : Player(board) {
     }
 
     override fun placeShips() {
+        println("Your board before placing ships:")
+        displayBoard(board, true)
+
         val shipSizes = listOf(5, 4, 3, 3, 2) // Пример размеров кораблей
         for (size in shipSizes) {
             var placed = false
@@ -34,7 +35,7 @@ class HumanPlayer(board: Board) : Player(board) {
                     println("Cannot place ship here. Try again.")
                 }
                 println("Your board:")
-                board.displayBoard(showShips = true)
+                displayBoard(board, true)
             }
         }
     }
@@ -48,5 +49,21 @@ class HumanPlayer(board: Board) : Player(board) {
             }
         }
     }
-}
 
+    private fun displayBoards(playerBoard: Board, opponentBoard: Board) {
+        val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
+        val opponentDisplay = opponentBoard.getBoardDisplay(showShips = false)
+
+        println("Your board:".padEnd(25) + "Opponent's board:")
+        for (i in playerDisplay.indices) {
+            println(playerDisplay[i].padEnd(25) + opponentDisplay[i])
+        }
+    }
+
+    private fun displayBoard(board: Board, showShips: Boolean) {
+        val display = board.getBoardDisplay(showShips)
+        for (line in display) {
+            println(line)
+        }
+    }
+}
