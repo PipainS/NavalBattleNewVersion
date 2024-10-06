@@ -1,6 +1,7 @@
 package Base.Abstract
 
 import Base.Board.Board
+import Base.Color.AnsiColors
 import Base.Coordinate
 import Base.Enum.CellStatus
 import Base.Enum.Orientation
@@ -12,7 +13,7 @@ class HumanPlayer(board: Board) : Player(board) {
     override fun makeMove(opponentBoard: Board): Coordinate {
         while (true) {
             try {
-                println("Enter coordinates (e.g., A 0): ")
+                println("${AnsiColors.ANSI_YELLOW}Enter coordinates (e.g., A 0): ${AnsiColors.ANSI_RESET}")
 
                 val input = readlnOrNull() ?: throw IllegalArgumentException("Input cannot be null")
                 val (letter, xStr) = input.split(" ")
@@ -23,13 +24,13 @@ class HumanPlayer(board: Board) : Player(board) {
                 // Проверка, стреляли ли уже в эту клетку
                 if (opponentBoard.grid[x][y].status == CellStatus.MISS ||
                     opponentBoard.grid[x][y].status == CellStatus.HIT) {
-                    println("You have already shot here! Try again.")
+                    println("${AnsiColors.ANSI_RED}You have already shot here! Try again.${AnsiColors.ANSI_RESET}")
                     continue
                 }
 
                 return Coordinate(x, y)
             } catch (e: Exception) {
-                println("Invalid input. Please try again.")
+                println("${AnsiColors.ANSI_RED}Invalid input. Please try again.${AnsiColors.ANSI_RESET}")
             }
         }
     }
@@ -41,7 +42,7 @@ class HumanPlayer(board: Board) : Player(board) {
             var placed = false
             while (!placed) {
                 try {
-                    println("Enter coordinates and orientation (H/V) for ship of size $size (e.g., A 0 H): ")
+                    println("${AnsiColors.ANSI_YELLOW}Enter coordinates and orientation (H/V) for ship of size $size (e.g., A 0 H): ${AnsiColors.ANSI_RESET}")
 
                     val input = readlnOrNull() ?: throw IllegalArgumentException("Input cannot be null")
                     val (letter, xStr, orientationInput) = input.split(" ")
@@ -56,13 +57,13 @@ class HumanPlayer(board: Board) : Player(board) {
                     placed = board.placeShip(ship)
 
                     if (!placed) {
-                        println("Cannot place ship here. Try again.")
+                        println("${AnsiColors.ANSI_RED}Cannot place ship here. Try again.${AnsiColors.ANSI_RESET}")
                     }
 
-                    println("Your board:")
+                    println("${AnsiColors.ANSI_GREEN}Your board:${AnsiColors.ANSI_RESET}")
                     displayBoard(board)
                 } catch (e: Exception) {
-                    println("Invalid input. Please try again.")
+                    println("${AnsiColors.ANSI_RED}Invalid input. Please try again.${AnsiColors.ANSI_RESET}")
                 }
             }
         }

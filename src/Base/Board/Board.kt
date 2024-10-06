@@ -107,7 +107,7 @@ class Board(val size: Int = 10) {
             row.append("$i ")
             for (j in 0..<size) {
                 val cell = grid[i][j]
-                val symbol = if (showShips || cell.status != CellStatus.SHIP) cell.getSymbol() else '.'
+                val symbol = if (showShips || cell.status != CellStatus.SHIP) cell.getColoredSymbol() else '.'
                 row.append("$symbol ")
             }
             result.add(row.toString())

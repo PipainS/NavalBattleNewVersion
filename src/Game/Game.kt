@@ -5,6 +5,7 @@ import Base.Board.Board
 import Base.Enum.CellStatus
 import Base.Abstract.HumanPlayer
 import Base.Abstract.ComputerPlayer
+import Base.Color.AnsiColors
 
 class Game {
     private val humanPlayer = HumanPlayer(Board())
@@ -12,9 +13,9 @@ class Game {
     private var isGameOver = false
 
     fun start() {
-        println("Welcome to Battleship!")
+        println("${AnsiColors.ANSI_GREEN}Welcome to Battleship!${AnsiColors.ANSI_RESET}")
 
-        println("Place your ships:")
+        println("${AnsiColors.ANSI_YELLOW}Place your ships:${AnsiColors.ANSI_RESET}")
         humanPlayer.placeShips()
         computerPlayer.placeShips()
 
@@ -34,7 +35,7 @@ class Game {
     }
 
     private fun playTurn(currentPlayer: Player, opponentPlayer: Player) {
-        println("${currentPlayer::class.simpleName}'s turn:")
+//        println("${currentPlayer::class.simpleName}'s turn:")
 
         val move = currentPlayer.makeMove(opponentPlayer.board)
         val result = opponentPlayer.board.receiveShot(move)
@@ -55,9 +56,16 @@ class Game {
         val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
         val opponentDisplay = opponentBoard.getBoardDisplay(showShips = false)
 
-        println("Your board:".padEnd(25) + "Opponent's board:")
+        println("${AnsiColors.ANSI_GREEN}Your board:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
+                "${AnsiColors.ANSI_RED}Opponent's board:${AnsiColors.ANSI_RESET}")
         for (i in playerDisplay.indices) {
-            println(playerDisplay[i].padEnd(25) + opponentDisplay[i])
+            println(playerDisplay[i].padEndAnsi(25) + opponentDisplay[i])
         }
+    }
+
+    private fun String.padEndAnsi(totalLength: Int, padChar: Char = ' '): String {
+        val strippedLength = this.replace(Regex("\u001B\\[[;\\d]*m"), "").length
+        val padLength = totalLength - strippedLength
+        return this + padChar.toString().repeat(padLength.coerceAtLeast(0))
     }
 }
