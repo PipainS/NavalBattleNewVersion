@@ -11,21 +11,26 @@ class HumanPlayer(board: Board) : Player(board) {
 
     override fun makeMove(opponentBoard: Board): Coordinate {
         while (true) {
-            println("Enter coordinates (e.g., A 0): ")
+            try {
+                println("Enter coordinates (e.g., A 0): ")
 
-            val input = readlnOrNull()
-            val (letter, xStr) = input!!.split(" ")
-            val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
-            val x = xStr.toInt()
+                val input = readlnOrNull() ?: throw IllegalArgumentException("Input cannot be null")
+                val (letter, xStr) = input.split(" ")
 
-            // Проверка, стреляли ли уже в эту клетку
-            if (opponentBoard.grid[x][y].status == CellStatus.MISS ||
-                opponentBoard.grid[x][y].status == CellStatus.HIT) {
-                println("You have already shot here! Try again.")
-                continue
+                val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+                val x = xStr.toIntOrNull() ?: throw IllegalArgumentException("Invalid coordinate")
+
+                // Проверка, стреляли ли уже в эту клетку
+                if (opponentBoard.grid[x][y].status == CellStatus.MISS ||
+                    opponentBoard.grid[x][y].status == CellStatus.HIT) {
+                    println("You have already shot here! Try again.")
+                    continue
+                }
+
+                return Coordinate(x, y)
+            } catch (e: Exception) {
+                println("Invalid input. Please try again.")
             }
-
-            return Coordinate(x, y)
         }
     }
 
@@ -35,30 +40,36 @@ class HumanPlayer(board: Board) : Player(board) {
         for (size in Constants.SHIP_SIZES) {
             var placed = false
             while (!placed) {
-                println("Enter coordinates and orientation (H/V) for ship of size $size (e.g., A 0 H): ")
+                try {
+                    println("Enter coordinates and orientation (H/V) for ship of size $size (e.g., A 0 H): ")
 
-                val input = readlnOrNull()
-                val (letter, x, orientationInput) = input!!.split(" ")
-                val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+                    val input = readlnOrNull() ?: throw IllegalArgumentException("Input cannot be null")
+                    val (letter, xStr, orientationInput) = input.split(" ")
 
-                val orientation = if (orientationInput.uppercase() == "H") Orientation.HORIZONTAL else Orientation.VERTICAL
-                val coordinates = generateCoordinates(size, Coordinate(x.toInt(), y), orientation)
+                    val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+                    val x = xStr.toIntOrNull() ?: throw IllegalArgumentException("Invalid coordinate")
 
-                val ship = Ship(size, coordinates, orientation)
-                placed = board.placeShip(ship)
+                    val orientation = if (orientationInput.uppercase() == "H") Orientation.HORIZONTAL else Orientation.VERTICAL
+                    val coordinates = generateCoordinates(size, Coordinate(x, y), orientation)
 
-                if (!placed) {
-                    println("Cannot place ship here. Try again.")
+                    val ship = Ship(size, coordinates, orientation)
+                    placed = board.placeShip(ship)
+
+                    if (!placed) {
+                        println("Cannot place ship here. Try again.")
+                    }
+
+                    println("Your board:")
+                    displayBoard(board)
+                } catch (e: Exception) {
+                    println("Invalid input. Please try again.")
                 }
-
-                println("Your board:")
-                displayBoard(board)
             }
         }
     }
 
     private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {
-        return (0..<size).map {
+        return (0 until size).map {
             if (orientation == Orientation.HORIZONTAL) {
                 Coordinate(start.x, start.y + it)
             } else {

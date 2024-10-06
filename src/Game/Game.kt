@@ -21,22 +21,27 @@ class Game {
         displayBoards(humanPlayer.board, computerPlayer.board)
         isGameOver = false
         while (!isGameOver) {
-            playTurn(humanPlayer, computerPlayer)
-            if (isGameOver) break
-            playTurn(computerPlayer, humanPlayer)
-
-            displayBoards(humanPlayer.board, computerPlayer.board)
+            try {
+                playTurn(humanPlayer, computerPlayer)
+                if (isGameOver) break
+                playTurn(computerPlayer, humanPlayer)
+                displayBoards(humanPlayer.board, computerPlayer.board)
+            } catch (e: Exception) {
+                println("An error occurred during the game. Please try again.")
+            }
         }
         println("Game Over!")
     }
 
     private fun playTurn(currentPlayer: Player, opponentPlayer: Player) {
         println("${currentPlayer::class.simpleName}'s turn:")
+
         val move = currentPlayer.makeMove(opponentPlayer.board)
         val result = opponentPlayer.board.receiveShot(move)
-        println("${currentPlayer::class.simpleName} shoots at (${move.x}, ${move.y}) and ${if (result == CellStatus.HIT) "hits" else "misses"}!")
-        checkGameOver(opponentPlayer)
 
+        println("${currentPlayer::class.simpleName} shoots at (${move.x}, ${move.y}) and ${if (result == CellStatus.HIT) "hits" else "misses"}!")
+
+        checkGameOver(opponentPlayer)
     }
 
     private fun checkGameOver(player: Player) {
