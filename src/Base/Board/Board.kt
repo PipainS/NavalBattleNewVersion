@@ -10,16 +10,34 @@ class Board(val size: Int = 10) {
     val ships: MutableList<Ship> = mutableListOf()
 
     fun canPlaceShip(ship: Ship): Boolean {
+        val directions = listOf(
+            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
+            Pair(0, -1), Pair(0, 1),
+            Pair(1, -1), Pair(1, 0), Pair(1, 1)
+        )
+
         for (coordinate in ship.coordinates) {
             if (coordinate.x !in 0 until size || coordinate.y !in 0 until size) {
-                return false // Корабль выходит за пределы доски
+                return false // Ship is out of board bounds
             }
             if (grid[coordinate.x][coordinate.y].status != CellStatus.EMPTY) {
-                return false // Место занято
+                return false // Cell is already occupied
+            }
+
+            // Check adjacent cells
+            for (direction in directions) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0 until size && adjY in 0 until size) {
+                    if (grid[adjX][adjY].status == CellStatus.SHIP) {
+                        return false // Adjacent cell contains a ship
+                    }
+                }
             }
         }
         return true
     }
+
 
     fun placeShip(ship: Ship): Boolean {
         if (!canPlaceShip(ship)) return false

@@ -11,5 +11,10 @@ class AnsiColors {
         const val ANSI_PURPLE = "\u001B[35m"
         const val ANSI_CYAN = "\u001B[36m"
         const val ANSI_WHITE = "\u001B[37m"
+
+        const val ANSI_BOLD = "\u001B[1m"
+        const val ANSI_UNDERLINE = "\u001B[4m"
+        const val ANSI_BLINK = "\u001B[5m"
+        const val ANSI_HIDDEN = "\u001B[8m"
     }
 }
