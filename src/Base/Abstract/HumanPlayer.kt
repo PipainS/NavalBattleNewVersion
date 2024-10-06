@@ -36,6 +36,7 @@ class HumanPlayer(board: Board) : Player(board) {
     }
 
     override fun placeShips() {
+        println("${AnsiColors.ANSI_YELLOW}Разместите свои корабли${AnsiColors.ANSI_RESET}")
         displayBoard(board)
 
         for (size in Constants.SHIP_SIZES) {
@@ -77,6 +78,35 @@ class HumanPlayer(board: Board) : Player(board) {
                 }
             }
         }
+    }
+
+    // ToDo: Заменить дубликат; вынести авто в отдельный модуль utils
+    fun autoPlaceShips() {
+//        displayBoard(board)
+
+        for (size in Constants.SHIP_SIZES) {
+            var placed = false
+            while (!placed) {
+                val x = (0..<board.size).random()
+                val y = (0..<board.size).random()
+                val orientation = if ((0..1).random() == 0)
+                    Orientation.HORIZONTAL
+                else
+                    Orientation.VERTICAL
+
+                val coordinates = generateCoordinates(size, Coordinate(x, y), orientation)
+                val ship = Ship(size, coordinates, orientation)
+
+                placed = board.placeShip(ship)
+
+                if (placed) {
+                    println("${AnsiColors.ANSI_GREEN}Корабль размером $size размещен автоматически.${AnsiColors.ANSI_RESET}")
+                }
+            }
+        }
+
+        println("${AnsiColors.ANSI_GREEN}Ваша доска после автозаполнения:${AnsiColors.ANSI_RESET}")
+        displayBoard(board)
     }
 
     // ToDo: перенести в utils или в другой класс, но точно не должно быть в классе human

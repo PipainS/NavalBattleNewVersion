@@ -13,22 +13,36 @@ class Game {
     private var isGameOver = false
 
     fun start() {
-        println("${AnsiColors.ANSI_GREEN}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}")
+        println("${AnsiColors.ANSI_GREEN}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
 
-        println("${AnsiColors.ANSI_YELLOW}Разместите свои корабли:${AnsiColors.ANSI_RESET}")
-        humanPlayer.placeShips()
+        println("${AnsiColors.ANSI_YELLOW}Хотите ли вы, чтобы ваши корабли были " +
+                "автоматически размещены? (да/нет): ${AnsiColors.ANSI_RESET}")
+
+        val humanAutoPlaceInput = readValidatedInput()
+        if (humanAutoPlaceInput == "да" || humanAutoPlaceInput == "yes") {
+            humanPlayer.autoPlaceShips() // Автоматически размещение кораблей
+        } else {
+            humanPlayer.placeShips() // ручное заполнение кораблей
+        }
+
+        // размещение кораблей для компьютера
         computerPlayer.placeShips()
 
+
+        println("\n${AnsiColors.ANSI_CYAN}Игра начинается ${AnsiColors.ANSI_RESET}")
         displayBoards(humanPlayer.board, computerPlayer.board)
         isGameOver = false
         while (!isGameOver) {
             try {
                 playTurn(humanPlayer, computerPlayer)
+
                 if (isGameOver) break
+
                 playTurn(computerPlayer, humanPlayer)
                 displayBoards(humanPlayer.board, computerPlayer.board)
             } catch (e: Exception) {
-                println("Во время игры произошла ошибка. Пожалуйста, попробуйте снова.")
+                println("${AnsiColors.ANSI_RED}Во время игры произошла ошибка. " +
+                        "Пожалуйста, попробуйте снова.${AnsiColors.ANSI_RESET}")
             }
         }
         println("Игра окончена!")
@@ -58,6 +72,7 @@ class Game {
 
         println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
                 "${AnsiColors.ANSI_RED}Доска противника:${AnsiColors.ANSI_RESET}")
+
         for (i in playerDisplay.indices) {
             println(playerDisplay[i].padEndAnsi(25) + opponentDisplay[i])
         }
@@ -66,6 +81,21 @@ class Game {
     private fun String.padEndAnsi(totalLength: Int, padChar: Char = ' '): String {
         val strippedLength = this.replace(Regex("\u001B\\[[;\\d]*m"), "").length
         val padLength = totalLength - strippedLength
+
         return this + padChar.toString().repeat(padLength.coerceAtLeast(0))
+    }
+
+    private fun readValidatedInput(): String {
+        while (true) {
+            try {
+                val input = readlnOrNull()?.trim()?.lowercase() ?: throw IllegalArgumentException("Ввод не может быть пустым")
+                if (input != "да" && input != "нет" && input != "yes" && input != "no") {
+                    throw IllegalArgumentException("Пожалуйста, введите 'да' или 'нет' (или 'yes'/'no')")
+                }
+                return input
+            } catch (e: IllegalArgumentException) {
+                println("${AnsiColors.ANSI_RED}${e.message}${AnsiColors.ANSI_RESET}")
+            }
+        }
     }
 }
