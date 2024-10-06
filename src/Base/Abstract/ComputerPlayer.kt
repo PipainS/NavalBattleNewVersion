@@ -44,7 +44,7 @@ class ComputerPlayer(board: Board) : Player(board) {
 
         // Вывод доски компьютера для отладки (можно закомментировать в финальной версии)
         println("Computer's board after placing ships (for debugging):")
-        displayBoard(board, true)
+        displayBoard(board)
     }
 
     private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {
@@ -57,7 +57,7 @@ class ComputerPlayer(board: Board) : Player(board) {
         }
     }
 
-    private fun displayBoard(board: Board, showShips: Boolean) {
+    private fun displayBoard(board: Board, showShips: Boolean = true) {
         val display = board.getBoardDisplay(showShips)
         for (line in display) {
             println(line)

@@ -91,7 +91,7 @@ class Board(val size: Int = 10) {
             for (direction in directions) {
                 val adjX = coordinate.x + direction.first
                 val adjY = coordinate.y + direction.second
-                if (adjX in 0 until size && adjY in 0 until size) {
+                if (adjX in 0..<size && adjY in 0..<size) {
                     val adjacentCell = grid[adjX][adjY]
                     if (adjacentCell.status == CellStatus.EMPTY) {
                         adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
