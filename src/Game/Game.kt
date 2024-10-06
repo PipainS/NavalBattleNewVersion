@@ -11,6 +11,7 @@ class Game {
     private val humanPlayer = HumanPlayer(Board())
     private val computerPlayer = ComputerPlayer(Board())
     private var isGameOver = false
+    private var isGodMode = false  // Добавляем флаг для режима "глаза бога"
 
     fun start() {
         println("${AnsiColors.ANSI_GREEN}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
@@ -18,7 +19,7 @@ class Game {
         println("${AnsiColors.ANSI_YELLOW}Хотите ли вы, чтобы ваши корабли были " +
                 "автоматически размещены? (да/нет): ${AnsiColors.ANSI_RESET}")
 
-        val humanAutoPlaceInput = readValidatedInput()
+        val humanAutoPlaceInput = readValidatedInput(checkForGodMode = true)
         if (humanAutoPlaceInput == "да" || humanAutoPlaceInput == "yes") {
             humanPlayer.autoPlaceShips() // Автоматически размещение кораблей
         } else {
@@ -27,7 +28,6 @@ class Game {
 
         // размещение кораблей для компьютера
         computerPlayer.placeShips()
-
 
         println("\n${AnsiColors.ANSI_CYAN}Игра начинается ${AnsiColors.ANSI_RESET}")
         displayBoards(humanPlayer.board, computerPlayer.board)
@@ -68,7 +68,7 @@ class Game {
 
     private fun displayBoards(playerBoard: Board, opponentBoard: Board) {
         val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
-        val opponentDisplay = opponentBoard.getBoardDisplay(showShips = false)
+        val opponentDisplay = opponentBoard.getBoardDisplay(showShips = isGodMode)
 
         println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
                 "${AnsiColors.ANSI_RED}Доска противника:${AnsiColors.ANSI_RESET}")
@@ -85,10 +85,20 @@ class Game {
         return this + padChar.toString().repeat(padLength.coerceAtLeast(0))
     }
 
-    private fun readValidatedInput(): String {
+    private fun readValidatedInput(prompt: String = "", checkForGodMode: Boolean = false): String {
         while (true) {
             try {
+                if (prompt.isNotEmpty()) {
+                    print(prompt)
+                }
                 val input = readlnOrNull()?.trim()?.lowercase() ?: throw IllegalArgumentException("Ввод не может быть пустым")
+
+                if (checkForGodMode && input.endsWith("godmode")) {
+                    isGodMode = true
+                    println("${AnsiColors.ANSI_RED}Читы активированы!${AnsiColors.ANSI_RESET}")
+                    return input.removeSuffix("godmode").trim()
+                }
+
                 if (input != "да" && input != "нет" && input != "yes" && input != "no") {
                     throw IllegalArgumentException("Пожалуйста, введите 'да' или 'нет' (или 'yes'/'no')")
                 }
