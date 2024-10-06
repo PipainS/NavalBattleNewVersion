@@ -2,6 +2,7 @@ package Base.Abstract
 
 import Base.Board.Board
 import Base.Coordinate
+import Base.Enum.CellStatus
 import Base.Enum.Orientation
 import Base.Ship
 
@@ -10,16 +11,26 @@ class HumanPlayer(board: Board) : Player(board) {
     // ToDo: перенести в отдельный класс с константами
 
     override fun makeMove(opponentBoard: Board): Coordinate {
-        println("Enter coordinates (e.g., A 0): ")
+        while (true) {
+            println("Enter coordinates (e.g., A 0): ")
 
-        val input = readLine()
+            val input = readLine()
+            val (letter, xStr) = input!!.split(" ")
+            val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+            val x = xStr.toInt()
 
-        // Преобразование координат
-        val (letter, x) = input!!.split(" ")
-        val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+            // Проверка, стреляли ли уже в эту клетку
+            // Проверка, стреляли ли уже в эту клетку
+            if (opponentBoard.grid[x][y].status == CellStatus.MISS || opponentBoard.grid[x][y].status == CellStatus.HIT) {
+                println("You have already shot here! Try again.")
+                continue
+            }
 
-        return Coordinate(x.toInt(), y)
+
+            return Coordinate(x, y)
+        }
     }
+
 
     override fun placeShips() {
         println("Your board before placing ships:")
