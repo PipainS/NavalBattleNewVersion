@@ -59,10 +59,55 @@ class Board(val size: Int = 10) {
             }
             CellStatus.SHIP -> {
                 cell.status = CellStatus.HIT
-                CellStatus.HIT
+                if (isShipSunk(coordinate)) {
+                    markAdjacentCells(getShipCoordinates(coordinate))
+                    println("Корабль уничтожен!")
+                    CellStatus.HIT
+                } else {
+                    CellStatus.HIT
+                }
             }
             else -> cell.status // Если по этой ячейке уже стреляли
         }
+    }
+
+    private fun getShipCoordinates(coordinate: Coordinate): List<Coordinate> {
+        for (ship in ships) {
+            if (coordinate in ship.coordinates) {
+                return ship.coordinates
+            }
+        }
+        return emptyList()
+    }
+
+    private fun markAdjacentCells(coordinates: List<Coordinate>) {
+        val directions = listOf(
+            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
+            Pair(0, -1), Pair(0, 1),
+            Pair(1, -1), Pair(1, 0), Pair(1, 1)
+        )
+
+        for (coordinate in coordinates) {
+            for (direction in directions) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0 until size && adjY in 0 until size) {
+                    val adjacentCell = grid[adjX][adjY]
+                    if (adjacentCell.status == CellStatus.EMPTY) {
+                        adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isShipSunk(coordinate: Coordinate): Boolean {
+        for (ship in ships) {
+            if (coordinate in ship.coordinates) {
+                return ship.coordinates.all { grid[it.x][it.y].status == CellStatus.HIT }
+            }
+        }
+        return false
     }
 
     fun getBoardDisplay(showShips: Boolean = false): List<String> {
