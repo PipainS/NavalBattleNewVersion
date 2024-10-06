@@ -7,19 +7,38 @@ import Base.Ship
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
-    val ships: MutableList<Ship> = mutableListOf()
+    private val ships: MutableList<Ship> = mutableListOf()
 
-    fun canPlaceShip(ship: Ship): Boolean {
+    private fun canPlaceShip(ship: Ship): Boolean {
+        // ToDo: Вынести в константный класс, написать что из себя представляют эти пары
+        val directions = listOf(
+            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
+            Pair(0, -1), Pair(0, 1),
+            Pair(1, -1), Pair(1, 0), Pair(1, 1)
+        )
+
         for (coordinate in ship.coordinates) {
-            if (coordinate.x !in 0 until size || coordinate.y !in 0 until size) {
-                return false // Корабль выходит за пределы доски
+            if (coordinate.x !in 0..<size || coordinate.y !in 0..<size) {
+                return false // Ship is out of board bounds
             }
             if (grid[coordinate.x][coordinate.y].status != CellStatus.EMPTY) {
-                return false // Место занято
+                return false // Cell is already occupied
+            }
+
+            // Check adjacent cells
+            for (direction in directions) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0..<size && adjY in 0..<size) {
+                    if (grid[adjX][adjY].status == CellStatus.SHIP) {
+                        return false // Adjacent cell contains a ship
+                    }
+                }
             }
         }
         return true
     }
+
 
     fun placeShip(ship: Ship): Boolean {
         if (!canPlaceShip(ship)) return false
@@ -46,17 +65,20 @@ class Board(val size: Int = 10) {
         }
     }
 
-    fun displayBoard(showShips: Boolean = false) {
-        println("  " + (0 until size).joinToString(" ") { it.toString() })
-        for (i in 0 until size) {
-            print("$i ")
-            for (j in 0 until size) {
+    fun getBoardDisplay(showShips: Boolean = false): List<String> {
+        val result = mutableListOf<String>()
+        val header = ('A'..'J').joinToString(" ") { it.toString() }
+        result.add("  $header") // Заголовок столбцов
+        for (i in 0..<size) {
+            val row = StringBuilder()
+            row.append("$i ")
+            for (j in 0..<size) {
                 val cell = grid[i][j]
                 val symbol = if (showShips || cell.status != CellStatus.SHIP) cell.getSymbol() else '.'
-                print("$symbol ")
+                row.append("$symbol ")
             }
-            println()
+            result.add(row.toString())
         }
+        return result
     }
 }
-
