@@ -8,4 +8,5 @@ object Constants {
         Pair(0, -1), Pair(0, 1),
         Pair(1, -1), Pair(1, 0), Pair(1, 1)
     )
+    val BOARD_HEADER = ('A'..'J').joinToString(" ") { it.toString() }
 }

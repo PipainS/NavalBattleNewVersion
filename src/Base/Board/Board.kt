@@ -4,19 +4,13 @@ import Base.Cell
 import Base.Coordinate
 import Base.Enum.CellStatus
 import Base.Ship
+import Base.Constants
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
     private val ships: MutableList<Ship> = mutableListOf()
 
     private fun canPlaceShip(ship: Ship): Boolean {
-        // ToDo: Вынести в константный класс, написать что из себя представляют эти пары
-        val directions = listOf(
-            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
-            Pair(0, -1), Pair(0, 1),
-            Pair(1, -1), Pair(1, 0), Pair(1, 1)
-        )
-
         for (coordinate in ship.coordinates) {
             if (coordinate.x !in 0..<size || coordinate.y !in 0..<size) {
                 return false // Ship is out of board bounds
@@ -26,19 +20,18 @@ class Board(val size: Int = 10) {
             }
 
             // Check adjacent cells
-            for (direction in directions) {
+            for (direction in Constants.ADJACENT_DIRECTIONS) {
                 val adjX = coordinate.x + direction.first
                 val adjY = coordinate.y + direction.second
-                if (adjX in 0..<size && adjY in 0..<size) {
+                if (adjX in 0 until size && adjY in 0 until size) {
                     if (grid[adjX][adjY].status == CellStatus.SHIP) {
-                        return false // Adjacent cell contains a ship
+                        return false
                     }
                 }
             }
         }
         return true
     }
-
 
     fun placeShip(ship: Ship): Boolean {
         if (!canPlaceShip(ship)) return false
@@ -81,17 +74,11 @@ class Board(val size: Int = 10) {
     }
 
     private fun markAdjacentCells(coordinates: List<Coordinate>) {
-        val directions = listOf(
-            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
-            Pair(0, -1), Pair(0, 1),
-            Pair(1, -1), Pair(1, 0), Pair(1, 1)
-        )
-
         for (coordinate in coordinates) {
-            for (direction in directions) {
+            for (direction in Constants.ADJACENT_DIRECTIONS) {
                 val adjX = coordinate.x + direction.first
                 val adjY = coordinate.y + direction.second
-                if (adjX in 0..<size && adjY in 0..<size) {
+                if (adjX in 0 until size && adjY in 0 until size) {
                     val adjacentCell = grid[adjX][adjY]
                     if (adjacentCell.status == CellStatus.EMPTY) {
                         adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
@@ -112,8 +99,9 @@ class Board(val size: Int = 10) {
 
     fun getBoardDisplay(showShips: Boolean = false): List<String> {
         val result = mutableListOf<String>()
-        val header = ('A'..'J').joinToString(" ") { it.toString() }
-        result.add("  $header") // Заголовок столбцов
+
+        result.add("  ${Constants.BOARD_HEADER}") // Заголовок столбцов
+
         for (i in 0..<size) {
             val row = StringBuilder()
             row.append("$i ")
