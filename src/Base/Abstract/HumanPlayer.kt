@@ -50,7 +50,11 @@ class HumanPlayer(board: Board) : Player(board) {
                     val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
                     val x = xStr.toIntOrNull() ?: throw IllegalArgumentException("Invalid coordinate")
 
-                    val orientation = if (orientationInput.uppercase() == "H") Orientation.HORIZONTAL else Orientation.VERTICAL
+                    val orientation = when (orientationInput.uppercase()) {
+                        "H" -> Orientation.HORIZONTAL
+                        "V" -> Orientation.VERTICAL
+                        else -> throw IllegalArgumentException("Invalid orientation input. Please enter 'H' for horizontal or 'V' for vertical.")
+                    }
                     val coordinates = generateCoordinates(size, Coordinate(x, y), orientation)
 
                     val ship = Ship(size, coordinates, orientation)
@@ -62,15 +66,18 @@ class HumanPlayer(board: Board) : Player(board) {
 
                     println("${AnsiColors.ANSI_GREEN}Your board:${AnsiColors.ANSI_RESET}")
                     displayBoard(board)
+                } catch (e: IllegalArgumentException) {
+                    // Выводим конкретное сообщение об ошибке
+                    println("${AnsiColors.ANSI_RED}${e.message}${AnsiColors.ANSI_RESET}")
                 } catch (e: Exception) {
-                    println("${AnsiColors.ANSI_RED}Invalid input. Please try again.${AnsiColors.ANSI_RESET}")
+                    println("${AnsiColors.ANSI_RED}An unexpected error occurred: ${e.message}. Please try again.${AnsiColors.ANSI_RESET}")
                 }
             }
         }
     }
 
     private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {
-        return (0 until size).map {
+        return (0..<size).map {
             if (orientation == Orientation.HORIZONTAL) {
                 Coordinate(start.x, start.y + it)
             } else {

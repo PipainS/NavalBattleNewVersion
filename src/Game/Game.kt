@@ -35,7 +35,6 @@ class Game {
     }
 
     private fun playTurn(currentPlayer: Player, opponentPlayer: Player) {
-//        println("${currentPlayer::class.simpleName}'s turn:")
 
         val move = currentPlayer.makeMove(opponentPlayer.board)
         val result = opponentPlayer.board.receiveShot(move)
