@@ -18,11 +18,14 @@ class Game {
         humanPlayer.placeShips()
         computerPlayer.placeShips()
 
+        displayBoards(humanPlayer.board, computerPlayer.board)
         isGameOver = false
         while (!isGameOver) {
             playTurn(humanPlayer, computerPlayer)
             if (isGameOver) break
             playTurn(computerPlayer, humanPlayer)
+
+            displayBoards(humanPlayer.board, computerPlayer.board)
         }
         println("Game Over!")
     }
@@ -34,7 +37,6 @@ class Game {
         println("${currentPlayer::class.simpleName} shoots at (${move.x}, ${move.y}) and ${if (result == CellStatus.HIT) "hits" else "misses"}!")
         checkGameOver(opponentPlayer)
 
-        displayBoards(currentPlayer.board, opponentPlayer.board)
     }
 
     private fun checkGameOver(player: Player) {

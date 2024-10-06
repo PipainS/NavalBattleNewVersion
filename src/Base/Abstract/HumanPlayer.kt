@@ -9,13 +9,13 @@ class HumanPlayer(board: Board) : Player(board) {
     private val letterToIndex = ('A'..'Z').mapIndexed { index, c -> c.toString() to index }.toMap() // fix
 
     override fun makeMove(opponentBoard: Board): Coordinate {
-        println("Your board:")
-        displayBoards(board, opponentBoard)
-
         println("Enter coordinates (e.g., A 0): ")
+
         val input = readLine()
+
         val (letter, x) = input!!.split(" ")
         val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+
         return Coordinate(x.toInt(), y)
     }
 
