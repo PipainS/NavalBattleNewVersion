@@ -6,13 +6,15 @@ import Base.Enum.Orientation
 import Base.Ship
 
 class HumanPlayer(board: Board) : Player(board) {
-    private val letterToIndex = ('A'..'Z').mapIndexed { index, c -> c.toString() to index }.toMap() // fix
+    private val letterToIndex = ('A'..'Z').mapIndexed { index, c -> c.toString() to index }.toMap()
+    // ToDo: перенести в отдельный класс с константами
 
     override fun makeMove(opponentBoard: Board): Coordinate {
         println("Enter coordinates (e.g., A 0): ")
 
         val input = readLine()
 
+        // Преобразование координат
         val (letter, x) = input!!.split(" ")
         val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
 
@@ -23,21 +25,27 @@ class HumanPlayer(board: Board) : Player(board) {
         println("Your board before placing ships:")
         displayBoard(board, true)
 
-        val shipSizes = listOf(5, 4, 3, 3, 2) // Example ship sizes
+        val shipSizes = listOf(5, 4, 3, 3, 2) // Example ship sizes ToDo: Перенести в отдельный класс с константами
+
         for (size in shipSizes) {
             var placed = false
             while (!placed) {
                 println("Enter coordinates and orientation (H/V) for ship of size $size (e.g., A 0 H): ")
+
                 val input = readLine()
                 val (letter, x, orientationInput) = input!!.split(" ")
                 val y = letterToIndex[letter.uppercase()] ?: throw IllegalArgumentException("Invalid coordinate")
+
                 val orientation = if (orientationInput.uppercase() == "H") Orientation.HORIZONTAL else Orientation.VERTICAL
                 val coordinates = generateCoordinates(size, Coordinate(x.toInt(), y), orientation)
+
                 val ship = Ship(size, coordinates, orientation)
                 placed = board.placeShip(ship)
+
                 if (!placed) {
                     println("Cannot place ship here. Try again.")
                 }
+
                 println("Your board:")
                 displayBoard(board, true)
             }
@@ -54,7 +62,9 @@ class HumanPlayer(board: Board) : Player(board) {
         }
     }
 
+    // ToDo: Вынести в класс с доской, так же из класса game вынести в класс board для удаления дубликата кода
     private fun displayBoards(playerBoard: Board, opponentBoard: Board) {
+
         val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
         val opponentDisplay = opponentBoard.getBoardDisplay(showShips = false)
 
@@ -64,8 +74,10 @@ class HumanPlayer(board: Board) : Player(board) {
         }
     }
 
+    // ToDo: Вынести в класс board
     private fun displayBoard(board: Board, showShips: Boolean) {
         val display = board.getBoardDisplay(showShips)
+
         for (line in display) {
             println(line)
         }
