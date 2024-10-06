@@ -43,8 +43,8 @@ class ComputerPlayer(board: Board) : Player(board) {
         }
 
         // Вывод доски компьютера для отладки (можно закомментировать в финальной версии)
-        println("Доска компьютера после расстановки кораблей (для отладки):")
-        displayBoard(board)
+//        println("Доска компьютера после расстановки кораблей (для отладки):")
+//        displayBoard(board)
     }
 
     private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {

@@ -79,6 +79,7 @@ class HumanPlayer(board: Board) : Player(board) {
         }
     }
 
+    // ToDo: перенести в utils или в другой класс, но точно не должно быть в классе human
     private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {
         return (0..<size).map {
             if (orientation == Orientation.HORIZONTAL) {
@@ -89,6 +90,7 @@ class HumanPlayer(board: Board) : Player(board) {
         }
     }
 
+    // ToDo: Перенести в board
     private fun displayBoard(board: Board, showShips: Boolean = true) {
         val display = board.getBoardDisplay(showShips)
         for (line in display) {
