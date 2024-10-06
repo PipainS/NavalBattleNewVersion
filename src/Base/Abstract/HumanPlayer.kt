@@ -82,7 +82,6 @@ class HumanPlayer(board: Board) : Player(board) {
 
     // ToDo: Заменить дубликат; вынести авто в отдельный модуль utils
     fun autoPlaceShips() {
-//        displayBoard(board)
 
         for (size in Constants.SHIP_SIZES) {
             var placed = false

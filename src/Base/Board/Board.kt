@@ -23,7 +23,7 @@ class Board(val size: Int = 10) {
             for (direction in Constants.ADJACENT_DIRECTIONS) {
                 val adjX = coordinate.x + direction.first
                 val adjY = coordinate.y + direction.second
-                if (adjX in 0 until size && adjY in 0 until size) {
+                if (adjX in 0..<size && adjY in 0..<size) {
                     if (grid[adjX][adjY].status == CellStatus.SHIP) {
                         return false
                     }
