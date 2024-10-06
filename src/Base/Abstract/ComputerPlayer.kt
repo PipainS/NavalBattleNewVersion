@@ -43,7 +43,7 @@ class ComputerPlayer(board: Board) : Player(board) {
         }
 
         // Вывод доски компьютера для отладки (можно закомментировать в финальной версии)
-        println("Computer's board after placing ships (for debugging):")
+        println("Доска компьютера после расстановки кораблей (для отладки):")
         displayBoard(board)
     }
 

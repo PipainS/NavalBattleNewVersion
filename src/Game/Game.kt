@@ -13,9 +13,9 @@ class Game {
     private var isGameOver = false
 
     fun start() {
-        println("${AnsiColors.ANSI_GREEN}Welcome to Battleship!${AnsiColors.ANSI_RESET}")
+        println("${AnsiColors.ANSI_GREEN}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}")
 
-        println("${AnsiColors.ANSI_YELLOW}Place your ships:${AnsiColors.ANSI_RESET}")
+        println("${AnsiColors.ANSI_YELLOW}Разместите свои корабли:${AnsiColors.ANSI_RESET}")
         humanPlayer.placeShips()
         computerPlayer.placeShips()
 
@@ -28,10 +28,10 @@ class Game {
                 playTurn(computerPlayer, humanPlayer)
                 displayBoards(humanPlayer.board, computerPlayer.board)
             } catch (e: Exception) {
-                println("An error occurred during the game. Please try again.")
+                println("Во время игры произошла ошибка. Пожалуйста, попробуйте снова.")
             }
         }
-        println("Game Over!")
+        println("Игра окончена!")
     }
 
     private fun playTurn(currentPlayer: Player, opponentPlayer: Player) {
@@ -39,7 +39,8 @@ class Game {
         val move = currentPlayer.makeMove(opponentPlayer.board)
         val result = opponentPlayer.board.receiveShot(move)
 
-        println("${currentPlayer::class.simpleName} shoots at (${move.x}, ${move.y}) and ${if (result == CellStatus.HIT) "hits" else "misses"}!")
+        println("${currentPlayer::class.simpleName} стреляет в (${move.x}, ${move.y}) " +
+                "и ${if (result == CellStatus.HIT) "попадает" else "промахивается"}!")
 
         checkGameOver(opponentPlayer)
     }
@@ -47,7 +48,7 @@ class Game {
     private fun checkGameOver(player: Player) {
         isGameOver = player.board.grid.flatten().none { it.status == CellStatus.SHIP }
         if (isGameOver) {
-            println("${player::class.simpleName} loses! All ships have been sunk.")
+            println("${player::class.simpleName} проигрывает! Все корабли уничтожены.")
         }
     }
 
@@ -55,8 +56,8 @@ class Game {
         val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
         val opponentDisplay = opponentBoard.getBoardDisplay(showShips = false)
 
-        println("${AnsiColors.ANSI_GREEN}Your board:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
-                "${AnsiColors.ANSI_RED}Opponent's board:${AnsiColors.ANSI_RESET}")
+        println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
+                "${AnsiColors.ANSI_RED}Доска противника:${AnsiColors.ANSI_RESET}")
         for (i in playerDisplay.indices) {
             println(playerDisplay[i].padEndAnsi(25) + opponentDisplay[i])
         }
