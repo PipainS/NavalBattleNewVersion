@@ -1,7 +1,10 @@
-package base
+package utils
 
-import base.Board.Board
-import base.Enum.Orientation
+import models.Board
+import models.enums.Orientation
+import config.Constants
+import models.Coordinate
+import models.Ship
 
 object ShipPlacementUtils {
     fun autoPlaceShips(board: Board) {
@@ -10,6 +13,7 @@ object ShipPlacementUtils {
             while (!placed) {
                 val x = (0..<board.size).random()
                 val y = (0..<board.size).random()
+
                 val orientation = if ((0..1).random() == 0)
                     Orientation.HORIZONTAL
                 else
@@ -19,13 +23,7 @@ object ShipPlacementUtils {
                 val ship = Ship(size, coordinates, orientation)
 
                 placed = board.placeShip(ship)
-
-                if (placed) {
-                    println("Корабль размером $size размещен автоматически.")
-                }
             }
         }
-        println("Ваша доска после автозаполнения:")
-        board.displayBoard()
     }
 }

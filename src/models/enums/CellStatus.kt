@@ -1,4 +1,4 @@
-package base.Enum
+package models.enums
 
 enum class CellStatus {
     EMPTY, SHIP, HIT, MISS

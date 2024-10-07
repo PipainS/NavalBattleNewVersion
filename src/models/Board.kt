@@ -1,37 +1,13 @@
-package base.Board
+package models
 
-import base.Cell
-import base.Coordinate
-import base.Enum.CellStatus
-import base.Ship
-import base.Constants
+import models.enums.CellStatus
+import config.Constants
+import utils.AnsiColors
+import utils.Utlis.padEndAnsi
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
     private val ships: MutableList<Ship> = mutableListOf()
-
-    private fun canPlaceShip(ship: Ship): Boolean {
-        for (coordinate in ship.coordinates) {
-            if (coordinate.x !in 0..<size || coordinate.y !in 0..<size) {
-                return false // Ship is out of board bounds
-            }
-            if (grid[coordinate.x][coordinate.y].status != CellStatus.EMPTY) {
-                return false // Cell is already occupied
-            }
-
-            // Check adjacent cells
-            for (direction in Constants.ADJACENT_DIRECTIONS) {
-                val adjX = coordinate.x + direction.first
-                val adjY = coordinate.y + direction.second
-                if (adjX in 0..<size && adjY in 0..<size) {
-                    if (grid[adjX][adjY].status == CellStatus.SHIP) {
-                        return false
-                    }
-                }
-            }
-        }
-        return true
-    }
 
     fun placeShip(ship: Ship): Boolean {
         if (!canPlaceShip(ship)) return false
@@ -64,6 +40,29 @@ class Board(val size: Int = 10) {
         }
     }
 
+    private fun canPlaceShip(ship: Ship): Boolean {
+        for (coordinate in ship.coordinates) {
+            if (coordinate.x !in 0..<size || coordinate.y !in 0..<size) {
+                return false // Ship is out of board bounds
+            }
+            if (grid[coordinate.x][coordinate.y].status != CellStatus.EMPTY) {
+                return false // Cell is already occupied
+            }
+
+            // Check adjacent cells
+            for (direction in Constants.ADJACENT_DIRECTIONS) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0..<size && adjY in 0..<size) {
+                    if (grid[adjX][adjY].status == CellStatus.SHIP) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+
     private fun getShipCoordinates(coordinate: Coordinate): List<Coordinate> {
         for (ship in ships) {
             if (coordinate in ship.coordinates) {
@@ -71,30 +70,6 @@ class Board(val size: Int = 10) {
             }
         }
         return emptyList()
-    }
-
-    private fun markAdjacentCells(coordinates: List<Coordinate>) {
-        for (coordinate in coordinates) {
-            for (direction in Constants.ADJACENT_DIRECTIONS) {
-                val adjX = coordinate.x + direction.first
-                val adjY = coordinate.y + direction.second
-                if (adjX in 0..<size && adjY in 0..<size) {
-                    val adjacentCell = grid[adjX][adjY]
-                    if (adjacentCell.status == CellStatus.EMPTY) {
-                        adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
-                    }
-                }
-            }
-        }
-    }
-
-    private fun isShipSunk(coordinate: Coordinate): Boolean {
-        for (ship in ships) {
-            if (coordinate in ship.coordinates) {
-                return ship.coordinates.all { grid[it.x][it.y].status == CellStatus.HIT }
-            }
-        }
-        return false
     }
 
     fun getBoardDisplay(showShips: Boolean = false): List<String> {
@@ -120,5 +95,43 @@ class Board(val size: Int = 10) {
         for (line in display) {
             println(line)
         }
+    }
+
+    companion object {
+        fun displayBoards(playerBoard: Board, opponentBoard: Board, isGodMode: Boolean = false) {
+            val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
+            val opponentDisplay = opponentBoard.getBoardDisplay(showShips = isGodMode)
+
+            println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
+                    "${AnsiColors.ANSI_RED}Доска противника:${AnsiColors.ANSI_RESET}")
+
+            for (i in playerDisplay.indices) {
+                println(playerDisplay[i].padEndAnsi(25) + opponentDisplay[i])
+            }
+        }
+    }
+
+    private fun markAdjacentCells(coordinates: List<Coordinate>) {
+        for (coordinate in coordinates) {
+            for (direction in Constants.ADJACENT_DIRECTIONS) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0..<size && adjY in 0..<size) {
+                    val adjacentCell = grid[adjX][adjY]
+                    if (adjacentCell.status == CellStatus.EMPTY) {
+                        adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isShipSunk(coordinate: Coordinate): Boolean {
+        for (ship in ships) {
+            if (coordinate in ship.coordinates) {
+                return ship.coordinates.all { grid[it.x][it.y].status == CellStatus.HIT }
+            }
+        }
+        return false
     }
 }

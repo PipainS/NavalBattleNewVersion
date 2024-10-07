@@ -1,4 +1,4 @@
-package base.Color
+package utils
 
 class AnsiColors {
     companion object {
