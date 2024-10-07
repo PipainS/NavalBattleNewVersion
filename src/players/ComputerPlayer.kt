@@ -1,10 +1,10 @@
-package base.abstract
+package players
 
-import base.Board.Board
-import base.Constants
-import base.Coordinate
-import base.Enum.CellStatus
-import base.ShipPlacementUtils
+import models.Board
+import config.Constants
+import models.Coordinate
+import models.enums.CellStatus
+import utils.ShipPlacementUtils
 
 class ComputerPlayer(board: Board) : Player(board) {
     private var lastHit: Coordinate? = null

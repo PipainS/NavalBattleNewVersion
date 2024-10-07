@@ -1,7 +1,6 @@
-package base
+package models
 
-import base.Board.Board
-import base.Enum.Orientation
+import models.enums.Orientation
 
 data class Coordinate(val x: Int, val y: Int) {
 

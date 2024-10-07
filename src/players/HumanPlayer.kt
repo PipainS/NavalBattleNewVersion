@@ -1,13 +1,13 @@
-package base.abstract
+package players
 
-import base.Board.Board
-import base.Color.AnsiColors
-import base.Coordinate
-import base.Enum.CellStatus
-import base.Enum.Orientation
-import base.Ship
-import base.Constants
-import base.ShipPlacementUtils
+import models.Board
+import utils.AnsiColors
+import models.Coordinate
+import models.enums.CellStatus
+import models.enums.Orientation
+import models.Ship
+import config.Constants
+import utils.ShipPlacementUtils
 
 class HumanPlayer(board: Board) : Player(board) {
 

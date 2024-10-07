@@ -1,10 +1,7 @@
-package base.Board
+package models
 
-import base.Cell
-import base.Coordinate
-import base.Enum.CellStatus
-import base.Ship
-import base.Constants
+import models.enums.CellStatus
+import config.Constants
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }

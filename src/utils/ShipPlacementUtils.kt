@@ -1,7 +1,10 @@
-package base
+package utils
 
-import base.Board.Board
-import base.Enum.Orientation
+import models.Board
+import models.enums.Orientation
+import config.Constants
+import models.Coordinate
+import models.Ship
 
 object ShipPlacementUtils {
     fun autoPlaceShips(board: Board) {

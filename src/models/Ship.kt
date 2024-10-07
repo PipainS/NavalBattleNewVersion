@@ -1,6 +1,6 @@
-package base
+package models
 
-import base.Enum.Orientation
+import models.enums.Orientation
 
 data class Ship(val size: Int,
                 val coordinates: List<Coordinate>,

@@ -1,7 +1,7 @@
-package base.abstract
+package players
 
-import base.Board.Board
-import base.Coordinate
+import models.Board
+import models.Coordinate
 
 abstract class Player(val board: Board) {
     abstract fun makeMove(opponentBoard: Board): Coordinate

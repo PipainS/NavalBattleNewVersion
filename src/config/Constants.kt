@@ -1,4 +1,6 @@
-package base
+package config
+
+import models.Coordinate
 
 object Constants {
     val LETTER_TO_INDEX = ('A'..'Z').mapIndexed { index, c -> c.toString() to index }.toMap()

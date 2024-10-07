@@ -1,17 +1,17 @@
-package Game
+package core
 
-import base.abstract.Player
-import base.Board.Board
-import base.Enum.CellStatus
-import base.abstract.HumanPlayer
-import base.abstract.ComputerPlayer
-import base.Color.AnsiColors
+import players.Player
+import models.Board
+import models.enums.CellStatus
+import players.HumanPlayer
+import players.ComputerPlayer
+import utils.AnsiColors
 
 class Game {
     private val humanPlayer = HumanPlayer(Board())
     private val computerPlayer = ComputerPlayer(Board())
     private var isGameOver = false
-    private var isGodMode = false  // Добавляем флаг для режима "глаза бога"
+    private var isGodMode = false  // флаг для режима "god mode"
 
     fun start() {
         println("${AnsiColors.ANSI_GREEN}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
