@@ -1,7 +1,7 @@
-package Base
+package base
 
-import Base.Color.AnsiColors
-import Base.Enum.CellStatus
+import base.Color.AnsiColors
+import base.Enum.CellStatus
 
 data class Cell(var status: CellStatus = CellStatus.EMPTY) {
     fun getSymbol(): Char {

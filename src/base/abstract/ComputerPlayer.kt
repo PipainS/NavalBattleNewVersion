@@ -1,11 +1,11 @@
-package Base.Abstract
+package base.abstract
 
-import Base.Board.Board
-import Base.Coordinate
-import Base.Enum.CellStatus
-import Base.Enum.Orientation
-import Base.Ship
-import Base.Constants
+import base.Board.Board
+import base.Coordinate
+import base.Enum.CellStatus
+import base.Enum.Orientation
+import base.Ship
+import base.Constants
 
 class ComputerPlayer(board: Board) : Player(board) {
     private var lastHit: Coordinate? = null
@@ -50,20 +50,10 @@ class ComputerPlayer(board: Board) : Player(board) {
                 else
                     Orientation.VERTICAL
 
-                val coordinates = generateCoordinates(size, Coordinate(x, y), orientation)
+                val coordinates = Coordinate.generateShipCoordinates(size, Coordinate(x, y), orientation)
                 val ship = Ship(size, coordinates, orientation)
 
                 placed = board.placeShip(ship)
-            }
-        }
-    }
-
-    private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {
-        return (0..<size).map {
-            if (orientation == Orientation.HORIZONTAL) {
-                Coordinate(start.x, start.y + it)
-            } else {
-                Coordinate(start.x + it, start.y)
             }
         }
     }
@@ -78,15 +68,11 @@ class ComputerPlayer(board: Board) : Player(board) {
 
         for (direction in directions) {
             val newCoordinate = Coordinate(coordinate.x + direction.x, coordinate.y + direction.y)
-            if (isValidCoordinate(newCoordinate, opponentBoard) &&
+            if (Coordinate.isValidCoordinate(newCoordinate, opponentBoard) &&
                 opponentBoard.grid[newCoordinate.x][newCoordinate.y].status != CellStatus.MISS &&
                 opponentBoard.grid[newCoordinate.x][newCoordinate.y].status != CellStatus.HIT) {
                 hitQueue.add(newCoordinate)
             }
         }
-    }
-
-    private fun isValidCoordinate(coordinate: Coordinate, board: Board): Boolean {
-        return coordinate.x in 0..<board.size && coordinate.y in 0..<board.size
     }
 }

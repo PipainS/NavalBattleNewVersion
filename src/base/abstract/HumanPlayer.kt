@@ -1,12 +1,12 @@
-package Base.Abstract
+package base.abstract
 
-import Base.Board.Board
-import Base.Color.AnsiColors
-import Base.Coordinate
-import Base.Enum.CellStatus
-import Base.Enum.Orientation
-import Base.Ship
-import Base.Constants
+import base.Board.Board
+import base.Color.AnsiColors
+import base.Coordinate
+import base.Enum.CellStatus
+import base.Enum.Orientation
+import base.Ship
+import base.Constants
 
 class HumanPlayer(board: Board) : Player(board) {
 
@@ -37,7 +37,7 @@ class HumanPlayer(board: Board) : Player(board) {
 
     override fun placeShips() {
         println("${AnsiColors.ANSI_YELLOW}Разместите свои корабли${AnsiColors.ANSI_RESET}")
-        displayBoard(board)
+        board.displayBoard()
 
         for (size in Constants.SHIP_SIZES) {
             var placed = false
@@ -58,7 +58,7 @@ class HumanPlayer(board: Board) : Player(board) {
                         else -> throw IllegalArgumentException("Недопустимый ввод ориентации. " +
                                 "Пожалуйста, введите 'H' для горизонтального или 'V' для вертикального.")
                     }
-                    val coordinates = generateCoordinates(size, Coordinate(x, y), orientation)
+                    val coordinates = Coordinate.generateShipCoordinates(size, Coordinate(x, y), orientation)
 
                     val ship = Ship(size, coordinates, orientation)
                     placed = board.placeShip(ship)
@@ -69,7 +69,7 @@ class HumanPlayer(board: Board) : Player(board) {
                     }
 
                     println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}")
-                    displayBoard(board)
+                    board.displayBoard()
                 } catch (e: IllegalArgumentException) {
                     println("${AnsiColors.ANSI_RED}${e.message}${AnsiColors.ANSI_RESET}")
                 } catch (e: Exception) {
@@ -93,7 +93,7 @@ class HumanPlayer(board: Board) : Player(board) {
                 else
                     Orientation.VERTICAL
 
-                val coordinates = generateCoordinates(size, Coordinate(x, y), orientation)
+                val coordinates = Coordinate.generateShipCoordinates(size, Coordinate(x, y), orientation)
                 val ship = Ship(size, coordinates, orientation)
 
                 placed = board.placeShip(ship)
@@ -105,25 +105,6 @@ class HumanPlayer(board: Board) : Player(board) {
         }
 
         println("${AnsiColors.ANSI_GREEN}Ваша доска после автозаполнения:${AnsiColors.ANSI_RESET}")
-        displayBoard(board)
-    }
-
-    // ToDo: перенести в utils или в другой класс, но точно не должно быть в классе human
-    private fun generateCoordinates(size: Int, start: Coordinate, orientation: Orientation): List<Coordinate> {
-        return (0..<size).map {
-            if (orientation == Orientation.HORIZONTAL) {
-                Coordinate(start.x, start.y + it)
-            } else {
-                Coordinate(start.x + it, start.y)
-            }
-        }
-    }
-
-    // ToDo: Перенести в board
-    private fun displayBoard(board: Board, showShips: Boolean = true) {
-        val display = board.getBoardDisplay(showShips)
-        for (line in display) {
-            println(line)
-        }
+        board.displayBoard()
     }
 }

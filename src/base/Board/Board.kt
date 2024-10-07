@@ -1,10 +1,10 @@
-package Base.Board
+package base.Board
 
-import Base.Cell
-import Base.Coordinate
-import Base.Enum.CellStatus
-import Base.Ship
-import Base.Constants
+import base.Cell
+import base.Coordinate
+import base.Enum.CellStatus
+import base.Ship
+import base.Constants
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
@@ -78,7 +78,7 @@ class Board(val size: Int = 10) {
             for (direction in Constants.ADJACENT_DIRECTIONS) {
                 val adjX = coordinate.x + direction.first
                 val adjY = coordinate.y + direction.second
-                if (adjX in 0 until size && adjY in 0 until size) {
+                if (adjX in 0..<size && adjY in 0..<size) {
                     val adjacentCell = grid[adjX][adjY]
                     if (adjacentCell.status == CellStatus.EMPTY) {
                         adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
@@ -113,5 +113,12 @@ class Board(val size: Int = 10) {
             result.add(row.toString())
         }
         return result
+    }
+
+    fun displayBoard(showShips: Boolean = true) {
+        val display = getBoardDisplay(showShips)
+        for (line in display) {
+            println(line)
+        }
     }
 }

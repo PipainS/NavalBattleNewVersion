@@ -1,11 +1,11 @@
 package Game
 
-import Base.Abstract.Player
-import Base.Board.Board
-import Base.Enum.CellStatus
-import Base.Abstract.HumanPlayer
-import Base.Abstract.ComputerPlayer
-import Base.Color.AnsiColors
+import base.abstract.Player
+import base.Board.Board
+import base.Enum.CellStatus
+import base.abstract.HumanPlayer
+import base.abstract.ComputerPlayer
+import base.Color.AnsiColors
 
 class Game {
     private val humanPlayer = HumanPlayer(Board())
@@ -95,7 +95,7 @@ class Game {
 
                 if (checkForGodMode && input.endsWith("godmode")) {
                     isGodMode = true
-                    println("${AnsiColors.ANSI_RED}Читы активированы!${AnsiColors.ANSI_RESET}")
+                    println("${AnsiColors.ANSI_RED}godmode включен!${AnsiColors.ANSI_RESET}")
                     return input.removeSuffix("godmode").trim()
                 }
 

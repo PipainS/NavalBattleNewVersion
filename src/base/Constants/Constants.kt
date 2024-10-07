@@ -1,4 +1,4 @@
-package Base
+package base
 
 object Constants {
     val LETTER_TO_INDEX = ('A'..'Z').mapIndexed { index, c -> c.toString() to index }.toMap()
