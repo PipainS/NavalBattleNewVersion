@@ -1,4 +1,4 @@
-package Base.Enum
+package base.Enum
 
 enum class Orientation {
     HORIZONTAL, VERTICAL
