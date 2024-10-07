@@ -2,10 +2,12 @@ package core
 
 import players.Player
 import models.Board
+import models.Board.Companion.displayBoards
 import models.enums.CellStatus
 import players.HumanPlayer
 import players.ComputerPlayer
 import utils.AnsiColors
+import utils.Utlis
 
 class Game {
     private val humanPlayer = HumanPlayer(Board())
@@ -14,12 +16,14 @@ class Game {
     private var isGodMode = false  // флаг для режима "god mode"
 
     fun start() {
-        println("${AnsiColors.ANSI_GREEN}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
+        println("${AnsiColors.ANSI_PURPLE}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
 
         println("${AnsiColors.ANSI_YELLOW}Хотите ли вы, чтобы ваши корабли были " +
                 "автоматически размещены? (да/нет): ${AnsiColors.ANSI_RESET}")
 
-        val humanAutoPlaceInput = readValidatedInput(checkForGodMode = true)
+        val (humanAutoPlaceInput, godMode) = Utlis.readValidatedInput(checkForGodMode = true)
+        isGodMode = godMode
+
         if (humanAutoPlaceInput == "да" || humanAutoPlaceInput == "yes") {
             humanPlayer.autoPlaceShips() // Автоматически размещение кораблей
         } else {
@@ -30,7 +34,8 @@ class Game {
         computerPlayer.placeShips()
 
         println("\n${AnsiColors.ANSI_CYAN}Игра начинается ${AnsiColors.ANSI_RESET}")
-        displayBoards(humanPlayer.board, computerPlayer.board)
+        displayBoards(humanPlayer.board, computerPlayer.board, isGodMode)
+
         isGameOver = false
         while (!isGameOver) {
             try {
@@ -39,12 +44,16 @@ class Game {
                 if (isGameOver) break
 
                 playTurn(computerPlayer, humanPlayer)
-                displayBoards(humanPlayer.board, computerPlayer.board)
+
+                displayBoards(humanPlayer.board, computerPlayer.board, isGodMode)
+
             } catch (e: Exception) {
                 println("${AnsiColors.ANSI_RED}Во время игры произошла ошибка. " +
                         "Пожалуйста, попробуйте снова.${AnsiColors.ANSI_RESET}")
             }
         }
+        // Финальный результат игры
+        displayBoards(humanPlayer.board, computerPlayer.board, isGodMode)
         println("Игра окончена!")
     }
 
@@ -63,49 +72,6 @@ class Game {
         isGameOver = player.board.grid.flatten().none { it.status == CellStatus.SHIP }
         if (isGameOver) {
             println("${player::class.simpleName} проигрывает! Все корабли уничтожены.")
-        }
-    }
-
-    private fun displayBoards(playerBoard: Board, opponentBoard: Board) {
-        val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
-        val opponentDisplay = opponentBoard.getBoardDisplay(showShips = isGodMode)
-
-        println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
-                "${AnsiColors.ANSI_RED}Доска противника:${AnsiColors.ANSI_RESET}")
-
-        for (i in playerDisplay.indices) {
-            println(playerDisplay[i].padEndAnsi(25) + opponentDisplay[i])
-        }
-    }
-
-    private fun String.padEndAnsi(totalLength: Int, padChar: Char = ' '): String {
-        val strippedLength = this.replace(Regex("\u001B\\[[;\\d]*m"), "").length
-        val padLength = totalLength - strippedLength
-
-        return this + padChar.toString().repeat(padLength.coerceAtLeast(0))
-    }
-
-    private fun readValidatedInput(prompt: String = "", checkForGodMode: Boolean = false): String {
-        while (true) {
-            try {
-                if (prompt.isNotEmpty()) {
-                    print(prompt)
-                }
-                val input = readlnOrNull()?.trim()?.lowercase() ?: throw IllegalArgumentException("Ввод не может быть пустым")
-
-                if (checkForGodMode && input.endsWith("godmode")) {
-                    isGodMode = true
-                    println("${AnsiColors.ANSI_RED}godmode включен!${AnsiColors.ANSI_RESET}")
-                    return input.removeSuffix("godmode").trim()
-                }
-
-                if (input != "да" && input != "нет" && input != "yes" && input != "no") {
-                    throw IllegalArgumentException("Пожалуйста, введите 'да' или 'нет' (или 'yes'/'no')")
-                }
-                return input
-            } catch (e: IllegalArgumentException) {
-                println("${AnsiColors.ANSI_RED}${e.message}${AnsiColors.ANSI_RESET}")
-            }
         }
     }
 }

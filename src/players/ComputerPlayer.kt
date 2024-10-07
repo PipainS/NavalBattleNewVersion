@@ -51,6 +51,7 @@ class ComputerPlayer(board: Board) : Player(board) {
         ShipPlacementUtils.autoPlaceShips(board)
     }
 
+    // Добавление соседних клеток в очередь, если попал в корабль, чтобы не лупить по рандомным местам
     private fun addSurroundingCoordinatesToQueue(opponentBoard: Board, coordinate: Coordinate) {
         for (direction in Constants.DIRECTIONS) {
 
@@ -65,6 +66,7 @@ class ComputerPlayer(board: Board) : Player(board) {
         }
     }
 
+    // Поиск клетки, в которой находится корабль, для удачного удара
     private fun findGuaranteedHit(opponentBoard: Board): Coordinate {
         for (x in 0..<board.size) {
             for (y in 0..<board.size) {

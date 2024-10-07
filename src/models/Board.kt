@@ -2,6 +2,8 @@ package models
 
 import models.enums.CellStatus
 import config.Constants
+import utils.AnsiColors
+import utils.Utlis.padEndAnsi
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
@@ -92,6 +94,20 @@ class Board(val size: Int = 10) {
         val display = getBoardDisplay(showShips)
         for (line in display) {
             println(line)
+        }
+    }
+
+    companion object {
+        fun displayBoards(playerBoard: Board, opponentBoard: Board, isGodMode: Boolean = false) {
+            val playerDisplay = playerBoard.getBoardDisplay(showShips = true)
+            val opponentDisplay = opponentBoard.getBoardDisplay(showShips = isGodMode)
+
+            println("${AnsiColors.ANSI_GREEN}Ваша доска:${AnsiColors.ANSI_RESET}".padEndAnsi(25) +
+                    "${AnsiColors.ANSI_RED}Доска противника:${AnsiColors.ANSI_RESET}")
+
+            for (i in playerDisplay.indices) {
+                println(playerDisplay[i].padEndAnsi(25) + opponentDisplay[i])
+            }
         }
     }
 
