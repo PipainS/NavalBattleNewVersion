@@ -7,6 +7,7 @@ import models.enums.CellStatus
 import players.HumanPlayer
 import players.ComputerPlayer
 import utils.AnsiColors
+import utils.DisplayUtils
 import utils.Utlis
 
 class Game {
@@ -16,8 +17,21 @@ class Game {
     private var isGodMode = false  // флаг для режима "god mode"
 
     fun start() {
-        println("${AnsiColors.ANSI_PURPLE}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
+        DisplayUtils.displayWelcomeMessage()
 
+        // Стартовая навигация
+        while (true) {
+            DisplayUtils.displayGameOptions()
+            val choice = readLine()
+            when (choice) {
+                "1" -> break
+                "2" -> DisplayUtils.displayRules()
+                else -> println("${AnsiColors.ANSI_RED}Неверный выбор. " +
+                        "Пожалуйста, выберите 1 или 2.${AnsiColors.ANSI_RESET}")
+            }
+        }
+
+        // Старт игры
         println("${AnsiColors.ANSI_YELLOW}Хотите ли вы, чтобы ваши корабли были " +
                 "автоматически размещены? (да/нет): ${AnsiColors.ANSI_RESET}")
 
@@ -39,11 +53,11 @@ class Game {
         isGameOver = false
         while (!isGameOver) {
             try {
-                playTurn(humanPlayer, computerPlayer)
+                playTurn(currentPlayer = humanPlayer, opponentPlayer = computerPlayer)
 
                 if (isGameOver) break
 
-                playTurn(computerPlayer, humanPlayer)
+                playTurn(currentPlayer = computerPlayer, opponentPlayer = humanPlayer)
 
                 displayBoards(humanPlayer.board, computerPlayer.board, isGodMode)
 
