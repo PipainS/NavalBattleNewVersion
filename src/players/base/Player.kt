@@ -1,4 +1,4 @@
-package players
+package players.base
 
 import models.Board
 import models.Coordinate

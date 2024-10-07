@@ -4,6 +4,7 @@ import models.Board
 import config.Constants
 import models.Coordinate
 import models.enums.CellStatus
+import players.base.Player
 import utils.ShipPlacementUtils
 
 class ComputerPlayer(board: Board) : Player(board) {

@@ -9,29 +9,6 @@ class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
     private val ships: MutableList<Ship> = mutableListOf()
 
-    private fun canPlaceShip(ship: Ship): Boolean {
-        for (coordinate in ship.coordinates) {
-            if (coordinate.x !in 0..<size || coordinate.y !in 0..<size) {
-                return false // Ship is out of board bounds
-            }
-            if (grid[coordinate.x][coordinate.y].status != CellStatus.EMPTY) {
-                return false // Cell is already occupied
-            }
-
-            // Check adjacent cells
-            for (direction in Constants.ADJACENT_DIRECTIONS) {
-                val adjX = coordinate.x + direction.first
-                val adjY = coordinate.y + direction.second
-                if (adjX in 0..<size && adjY in 0..<size) {
-                    if (grid[adjX][adjY].status == CellStatus.SHIP) {
-                        return false
-                    }
-                }
-            }
-        }
-        return true
-    }
-
     fun placeShip(ship: Ship): Boolean {
         if (!canPlaceShip(ship)) return false
 
@@ -61,6 +38,29 @@ class Board(val size: Int = 10) {
             }
             else -> cell.status // Если по этой ячейке уже стреляли
         }
+    }
+
+    private fun canPlaceShip(ship: Ship): Boolean {
+        for (coordinate in ship.coordinates) {
+            if (coordinate.x !in 0..<size || coordinate.y !in 0..<size) {
+                return false // Ship is out of board bounds
+            }
+            if (grid[coordinate.x][coordinate.y].status != CellStatus.EMPTY) {
+                return false // Cell is already occupied
+            }
+
+            // Check adjacent cells
+            for (direction in Constants.ADJACENT_DIRECTIONS) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0..<size && adjY in 0..<size) {
+                    if (grid[adjX][adjY].status == CellStatus.SHIP) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
     }
 
     private fun getShipCoordinates(coordinate: Coordinate): List<Coordinate> {

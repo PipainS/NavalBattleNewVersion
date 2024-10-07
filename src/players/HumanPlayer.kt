@@ -7,6 +7,7 @@ import models.enums.CellStatus
 import models.enums.Orientation
 import models.Ship
 import config.Constants
+import players.base.Player
 import utils.ShipPlacementUtils
 
 class HumanPlayer(board: Board) : Player(board) {

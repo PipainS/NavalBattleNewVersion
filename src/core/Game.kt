@@ -1,6 +1,6 @@
 package core
 
-import players.Player
+import players.base.Player
 import models.Board
 import models.Board.Companion.displayBoards
 import models.enums.CellStatus

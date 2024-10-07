@@ -1,6 +1,7 @@
 package utils
 
 object Utlis {
+    // преобразованный метод padend для работы с ansi
     fun String.padEndAnsi(totalLength: Int, padChar: Char = ' '): String {
         val strippedLength = this.replace(Regex("\u001B\\[[;\\d]*m"), "").length
         val padLength = totalLength - strippedLength
