@@ -10,6 +10,7 @@ object ShipPlacementUtils {
             while (!placed) {
                 val x = (0..<board.size).random()
                 val y = (0..<board.size).random()
+
                 val orientation = if ((0..1).random() == 0)
                     Orientation.HORIZONTAL
                 else
@@ -19,13 +20,7 @@ object ShipPlacementUtils {
                 val ship = Ship(size, coordinates, orientation)
 
                 placed = board.placeShip(ship)
-
-                if (placed) {
-                    println("Корабль размером $size размещен автоматически.")
-                }
             }
         }
-        println("Ваша доска после автозаполнения:")
-        board.displayBoard()
     }
 }

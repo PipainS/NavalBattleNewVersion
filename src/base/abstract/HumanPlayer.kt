@@ -7,6 +7,7 @@ import base.Enum.CellStatus
 import base.Enum.Orientation
 import base.Ship
 import base.Constants
+import base.ShipPlacementUtils
 
 class HumanPlayer(board: Board) : Player(board) {
 
@@ -80,31 +81,12 @@ class HumanPlayer(board: Board) : Player(board) {
         }
     }
 
-    // ToDo: Заменить дубликат; вынести авто в отдельный модуль utils
+    // Авторасстановка кораблей
     fun autoPlaceShips() {
-
-        for (size in Constants.SHIP_SIZES) {
-            var placed = false
-            while (!placed) {
-                val x = (0..<board.size).random()
-                val y = (0..<board.size).random()
-                val orientation = if ((0..1).random() == 0)
-                    Orientation.HORIZONTAL
-                else
-                    Orientation.VERTICAL
-
-                val coordinates = Coordinate.generateShipCoordinates(size, Coordinate(x, y), orientation)
-                val ship = Ship(size, coordinates, orientation)
-
-                placed = board.placeShip(ship)
-
-                if (placed) {
-                    println("${AnsiColors.ANSI_GREEN}Корабль размером $size размещен автоматически.${AnsiColors.ANSI_RESET}")
-                }
-            }
-        }
+        ShipPlacementUtils.autoPlaceShips(board)
 
         println("${AnsiColors.ANSI_GREEN}Ваша доска после автозаполнения:${AnsiColors.ANSI_RESET}")
+
         board.displayBoard()
     }
 }

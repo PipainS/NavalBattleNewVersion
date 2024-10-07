@@ -73,30 +73,6 @@ class Board(val size: Int = 10) {
         return emptyList()
     }
 
-    private fun markAdjacentCells(coordinates: List<Coordinate>) {
-        for (coordinate in coordinates) {
-            for (direction in Constants.ADJACENT_DIRECTIONS) {
-                val adjX = coordinate.x + direction.first
-                val adjY = coordinate.y + direction.second
-                if (adjX in 0..<size && adjY in 0..<size) {
-                    val adjacentCell = grid[adjX][adjY]
-                    if (adjacentCell.status == CellStatus.EMPTY) {
-                        adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
-                    }
-                }
-            }
-        }
-    }
-
-    private fun isShipSunk(coordinate: Coordinate): Boolean {
-        for (ship in ships) {
-            if (coordinate in ship.coordinates) {
-                return ship.coordinates.all { grid[it.x][it.y].status == CellStatus.HIT }
-            }
-        }
-        return false
-    }
-
     fun getBoardDisplay(showShips: Boolean = false): List<String> {
         val result = mutableListOf<String>()
 
@@ -120,5 +96,29 @@ class Board(val size: Int = 10) {
         for (line in display) {
             println(line)
         }
+    }
+
+    private fun markAdjacentCells(coordinates: List<Coordinate>) {
+        for (coordinate in coordinates) {
+            for (direction in Constants.ADJACENT_DIRECTIONS) {
+                val adjX = coordinate.x + direction.first
+                val adjY = coordinate.y + direction.second
+                if (adjX in 0..<size && adjY in 0..<size) {
+                    val adjacentCell = grid[adjX][adjY]
+                    if (adjacentCell.status == CellStatus.EMPTY) {
+                        adjacentCell.status = CellStatus.MISS // Закрашиваем соседнюю клетку
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isShipSunk(coordinate: Coordinate): Boolean {
+        for (ship in ships) {
+            if (coordinate in ship.coordinates) {
+                return ship.coordinates.all { grid[it.x][it.y].status == CellStatus.HIT }
+            }
+        }
+        return false
     }
 }
