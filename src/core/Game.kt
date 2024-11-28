@@ -7,7 +7,8 @@ import models.enums.CellStatus
 import players.HumanPlayer
 import players.ComputerPlayer
 import utils.AnsiColors
-import utils.Utlis
+import utils.DisplayUtils
+import utils.Utils
 
 class Game {
     private val humanPlayer = HumanPlayer(Board())
@@ -16,12 +17,25 @@ class Game {
     private var isGodMode = false  // флаг для режима "god mode"
 
     fun start() {
-        println("${AnsiColors.ANSI_PURPLE}Добро пожаловать в Морской бой!${AnsiColors.ANSI_RESET}\n")
+        DisplayUtils.displayWelcomeMessage()
 
+        // Стартовая навигация
+        while (true) {
+            DisplayUtils.displayGameOptions()
+            val choice = readlnOrNull()
+            when (choice) {
+                "1" -> break
+                "2" -> DisplayUtils.displayRules()
+                else -> println("${AnsiColors.ANSI_RED}Неверный выбор. " +
+                        "Пожалуйста, выберите 1 или 2.${AnsiColors.ANSI_RESET}")
+            }
+        }
+
+        // Старт игры
         println("${AnsiColors.ANSI_YELLOW}Хотите ли вы, чтобы ваши корабли были " +
                 "автоматически размещены? (да/нет): ${AnsiColors.ANSI_RESET}")
 
-        val (humanAutoPlaceInput, godMode) = Utlis.readValidatedInput(checkForGodMode = true)
+        val (humanAutoPlaceInput, godMode) = Utils.readValidatedInput(checkForGodMode = true)
         isGodMode = godMode
 
         if (humanAutoPlaceInput == "да" || humanAutoPlaceInput == "yes") {
@@ -39,11 +53,11 @@ class Game {
         isGameOver = false
         while (!isGameOver) {
             try {
-                playTurn(humanPlayer, computerPlayer)
+                playTurn(currentPlayer = humanPlayer, opponentPlayer = computerPlayer)
 
                 if (isGameOver) break
 
-                playTurn(computerPlayer, humanPlayer)
+                playTurn(currentPlayer = computerPlayer, opponentPlayer = humanPlayer)
 
                 displayBoards(humanPlayer.board, computerPlayer.board, isGodMode)
 
@@ -52,8 +66,8 @@ class Game {
                         "Пожалуйста, попробуйте снова.${AnsiColors.ANSI_RESET}")
             }
         }
-        // Финальный результат игры
-        displayBoards(humanPlayer.board, computerPlayer.board, isGodMode)
+        // Финальный результат игры, чтобы все видели результат
+        displayBoards(humanPlayer.board, computerPlayer.board, true)
         println("Игра окончена!")
     }
 
@@ -69,7 +83,7 @@ class Game {
     }
 
     private fun checkGameOver(player: Player) {
-        isGameOver = player.board.grid.flatten().none { it.status == CellStatus.SHIP }
+        isGameOver = player.board.grid.flatten().none { it.status == CellStatus.SHIP } //none проверяет, не выполняется ли условие для всех элементов списк
         if (isGameOver) {
             println("${player::class.simpleName} проигрывает! Все корабли уничтожены.")
         }
