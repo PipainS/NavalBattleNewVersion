@@ -15,24 +15,29 @@ class HumanPlayer(board: Board) : Player(board) {
     override fun makeMove(opponentBoard: Board): Coordinate {
         while (true) {
             try {
-                println("${AnsiColors.ANSI_YELLOW}Введите координаты (например, A 0): ${AnsiColors.ANSI_RESET}")
+                println("${AnsiColors.ANSI_YELLOW}Введите координаты " +
+                        "(например, A 0): ${AnsiColors.ANSI_RESET}")
 
                 val input = readlnOrNull() ?: throw IllegalArgumentException("Ввод не может быть пустым")
                 val (letter, xStr) = input.split(" ")
 
-                val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Недопустимая координата")
-                val x = xStr.toIntOrNull() ?: throw IllegalArgumentException("Недопустимая координата")
+                val y = Constants.LETTER_TO_INDEX[letter.uppercase()]
+                    ?: throw IllegalArgumentException("Недопустимая координата")
+                val x = xStr.toIntOrNull()
+                    ?: throw IllegalArgumentException("Недопустимая координата")
 
                 // Проверка, стреляли ли уже в эту клетку
                 if (opponentBoard.grid[x][y].status == CellStatus.MISS ||
                     opponentBoard.grid[x][y].status == CellStatus.HIT) {
-                    println("${AnsiColors.ANSI_RED}Вы уже стреляли сюда! Попробуйте снова.${AnsiColors.ANSI_RESET}")
+                    println("${AnsiColors.ANSI_RED}Вы уже стреляли сюда! " +
+                            "Попробуйте снова.${AnsiColors.ANSI_RESET}")
                     continue
                 }
 
                 return Coordinate(x, y)
             } catch (e: Exception) {
-                println("${AnsiColors.ANSI_RED}Недопустимый ввод. Пожалуйста, попробуйте снова.${AnsiColors.ANSI_RESET}")
+                println("${AnsiColors.ANSI_RED}Недопустимый ввод. " +
+                        "Пожалуйста, попробуйте снова.${AnsiColors.ANSI_RESET}")
             }
         }
     }
@@ -51,8 +56,11 @@ class HumanPlayer(board: Board) : Player(board) {
                     val input = readlnOrNull() ?: throw IllegalArgumentException("Недопустимая координата")
                     val (letter, xStr, orientationInput) = input.split(" ")
 
-                    val y = Constants.LETTER_TO_INDEX[letter.uppercase()] ?: throw IllegalArgumentException("Недопустимая координата")
-                    val x = xStr.toIntOrNull() ?: throw IllegalArgumentException("Недопустимая координата")
+                    val y = Constants.LETTER_TO_INDEX[letter.uppercase()]
+                        ?: throw IllegalArgumentException("Недопустимая координата")
+
+                    val x = xStr.toIntOrNull()
+                        ?: throw IllegalArgumentException("Недопустимая координата")
 
                     val orientation = when (orientationInput.uppercase()) {
                         "H" -> Orientation.HORIZONTAL
@@ -60,6 +68,7 @@ class HumanPlayer(board: Board) : Player(board) {
                         else -> throw IllegalArgumentException("Недопустимый ввод ориентации. " +
                                 "Пожалуйста, введите 'H' для горизонтального или 'V' для вертикального.")
                     }
+
                     val coordinates = Coordinate.generateShipCoordinates(size, Coordinate(x, y), orientation)
 
                     val ship = Ship(size, coordinates, orientation)

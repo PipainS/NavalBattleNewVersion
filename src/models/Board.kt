@@ -3,7 +3,7 @@ package models
 import models.enums.CellStatus
 import config.Constants
 import utils.AnsiColors
-import utils.Utlis.padEndAnsi
+import utils.Utils.padEndAnsi
 
 class Board(val size: Int = 10) {
     val grid: Array<Array<Cell>> = Array(size) { Array(size) { Cell() } }
